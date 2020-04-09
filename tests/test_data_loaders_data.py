@@ -19,7 +19,7 @@ def run_data_loaders():
                 exec(code, globals(), globals())
 
 
-# @unittest.skip("Only run if want to test data_loaders")
+@unittest.skip("Only run if want to test data_loaders")
 class TestDataLoadersData(unittest.TestCase):
 
     @classmethod
