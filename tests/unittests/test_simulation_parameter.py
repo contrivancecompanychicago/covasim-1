@@ -3,12 +3,12 @@ Tests of simulation parameters from
 ../../covasim/README.md
 """
 import unittest
-import covasim as cv
 
 from unittest_support_classes import CovaSimTest, TestProperties
 
 TPKeys = TestProperties.ParameterKeys.SimulationKeys
 ResKeys = TestProperties.ResultsDataKeys
+
 
 class SimulationParameterTests(CovaSimTest):
     def setUp(self):
@@ -19,8 +19,6 @@ class SimulationParameterTests(CovaSimTest):
         super().tearDown()
         pass
 
-    @unittest.skip("Need to construct a population now")
-    # TODO: ValueError: Cannot take a larger sample than population when 'replace=False'
     def test_population_size(self):
         """
         Set population size to vanilla (1234)
@@ -28,7 +26,6 @@ class SimulationParameterTests(CovaSimTest):
 
         Depends on run default simulation
         """
-        self.is_debugging = True
         self.set_microsim()
         TPKeys = TestProperties.ParameterKeys.SimulationKeys
         pop_10_one_day = {
@@ -36,7 +33,7 @@ class SimulationParameterTests(CovaSimTest):
             TPKeys.use_layers: True,
             TPKeys.population_scaling_factor: 1,
             TPKeys.number_simulated_days: 1,
-            TPKeys.number_agents: 10,
+            TPKeys.number_agents: 100,
             TPKeys.initial_infected_count: 0
         }
         pop_123_one_day = {
@@ -55,8 +52,6 @@ class SimulationParameterTests(CovaSimTest):
             TPKeys.number_agents: 1234,
             TPKeys.initial_infected_count: 0
         }
-        # sim = cv.Sim(pop_10_one_day)
-        # sim.run()
         self.run_sim(pop_10_one_day)
         pop_10_pop = self.get_day_zero_channel_value()
         self.run_sim(pop_123_one_day)
@@ -76,6 +71,8 @@ class SimulationParameterTests(CovaSimTest):
         self.is_debugging = True
         self.set_microsim()
         pop_zero_one_day = {
+            TPKeys.enable_synthpops: "random",
+            TPKeys.use_layers: True,
             TPKeys.population_scaling_factor: 1,
             TPKeys.number_simulated_days: 1,
             TPKeys.number_agents: 0,
@@ -96,8 +93,11 @@ class SimulationParameterTests(CovaSimTest):
         self.is_debugging = True
         self.set_smallpop_hightransmission()
         negative_infected_count = {
+            TPKeys.enable_synthpops: "random",
+            TPKeys.use_layers: True,
             TPKeys.population_scaling_factor: 1,
-            TPKeys.initial_infected_count: -1
+            TPKeys.initial_infected_count: -1,
+            TPKeys.number_agents: 500,
         }
         with self.assertRaises(ValueError) as context:
             self.run_sim(negative_infected_count)
