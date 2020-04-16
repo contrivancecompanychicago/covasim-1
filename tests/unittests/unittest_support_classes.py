@@ -26,7 +26,8 @@ class TestProperties:
             number_simulated_days = 'n_days'
             random_seed = 'rand_seed'
             verbose = 'verbose'
-            enable_synthpops = 'usepopdata'
+            enable_synthpops = 'pop_type'
+            use_layers = 'use_layers'
             time_limit = 'timelimit'
             # stopping_function = 'stop_func'
             pass
@@ -89,6 +90,8 @@ class TestProperties:
             pop_infected = 1
             contacts = 2
             n_days = 10
+            pop_type = "synthpops"
+            use_layers = "use_layers"
             pass
         class Hightransmission:
             n = 500
@@ -272,9 +275,11 @@ class CovaSimTest(unittest.TestCase):
         Simkeys = TestProperties.ParameterKeys.SimulationKeys
         Micro = TestProperties.SpecializedSimulations.Microsim
         microsim_parameters = {
-            Simkeys.number_agents : Micro.n,
+            Simkeys.number_agents: Micro.n,
             Simkeys.initial_infected_count: Micro.pop_infected,
-            Simkeys.number_simulated_days: Micro.n_days
+            Simkeys.number_simulated_days: Micro.n_days,
+            Simkeys.enable_synthpops: Micro.pop_type,
+            Simkeys.use_layers: Micro.use_layers,
         }
         self.set_simulation_parameters(microsim_parameters)
         pass
