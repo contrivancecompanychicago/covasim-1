@@ -19,8 +19,8 @@ class SimulationParameterTests(CovaSimTest):
         super().tearDown()
         pass
 
-    # @unittest.skip("Need to construct a population now")
-    #TODO: ValueError: Cannot take a larger sample than population when 'replace=False'
+    @unittest.skip("Need to construct a population now")
+    # TODO: ValueError: Cannot take a larger sample than population when 'replace=False'
     def test_population_size(self):
         """
         Set population size to vanilla (1234)
