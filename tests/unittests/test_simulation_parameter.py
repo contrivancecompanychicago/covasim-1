@@ -68,7 +68,6 @@ class SimulationParameterTests(CovaSimTest):
         """
         Intent is to test zero, negative, and excessively large pop sizes
         """
-        self.is_debugging = True
         self.set_microsim()
         pop_zero_one_day = {
             TPKeys.enable_synthpops: "random",
@@ -90,7 +89,6 @@ class SimulationParameterTests(CovaSimTest):
         """
         Test negative infected count
         """
-        self.is_debugging = True
         self.set_smallpop_hightransmission()
         negative_infected_count = {
             TPKeys.enable_synthpops: "random",
