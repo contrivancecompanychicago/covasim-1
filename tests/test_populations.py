@@ -5,7 +5,6 @@ Testing populations in Covasim
 #%% Imports and settings
 import os
 import covasim as cv
-import sciris as sc
 import unittest
 
 from unittest_support_classes import CovaSimTest, TestProperties
@@ -36,16 +35,15 @@ class TestPopulations(CovaSimTest):
         cached_population_filename_2 = os.path.join('test_data', 'example_population_5000.ppl')
         del_file(cached_population_filename_2)
 
-    @unittest.skip("See IDM/covasim repo GH 138")
     def test_save_load_synthpops_population(self):
         # Simulation parameters
         params = {
-            "pop_size": 100,  # Population size
+            "pop_size": 5000,  # Population size
             "pop_infected": 10,  # Initial infections
             "start_day": "2020-03-20",
             "n_days": 180,
             "pop_type": "synthpops",
-            "use_layers": True
+            # "use_layers": True,
         }
 
         # Store the filename
@@ -53,7 +51,7 @@ class TestPopulations(CovaSimTest):
 
         base_sim = cv.Sim(pars=params)
         # save the population
-        save_pop = base_sim.save_population(cached_population_filename)
+        save_pop = base_sim.initialize(save_pop=True, popfile=cached_population_filename)
         # now load it
         load_pop = base_sim.load_population(cached_population_filename)
 
@@ -63,7 +61,6 @@ class TestPopulations(CovaSimTest):
         # Test cleanup - delete file
         del_file(cached_population_filename)
 
-    @unittest.skip("See IDM/covasim repo GH 138")
     def test_random_load_population(self):
 
         # Simulation parameters
@@ -73,7 +70,7 @@ class TestPopulations(CovaSimTest):
             "start_day": "2020-01-15",
             "n_days": 60,
             "pop_type": "random",
-            "use_layers": True
+            # "use_layers": True
         }
 
         # Store the filename
@@ -81,7 +78,7 @@ class TestPopulations(CovaSimTest):
 
         # Create the simulation
         sim = cv.Sim(params)
-        save_pop = sim.save_population(cached_population_filename)
+        save_pop = sim.initialize(save_pop=True, popfile=cached_population_filename)
         # Now load the population
         load_pop = sim.load_population(cached_population_filename)
 
@@ -103,7 +100,7 @@ class TestPopulations(CovaSimTest):
             "start_day": "2020-01-15",
             "n_days": 60,
             "pop_type": "clustered",
-            "use_layers": True
+            # "use_layers": True
         }
 
         # Store the filename
@@ -114,23 +111,24 @@ class TestPopulations(CovaSimTest):
         if load_population:
             sim.load_population(cached_population_filename)
 
+        # Optionally save
+        if save_population:
+            sim.initialize(save_pop=True, popfile=cached_population_filename)
+
         # Run the simulation
         sim.run()
         sim.plot()
 
-        # Optionally save
-        if save_population:
-            sim.save_population(cached_population_filename)
-
-        infections = sim.results['n_susceptible']
-        self.assertGreaterEqual(sum(infections), 10, msg=f"Should have 10 susceptible")
+        infections = sim.results['cum_infections']
+        self.assertGreaterEqual(sum(infections), 65,
+                                msg=f"Should have greater than or equal to 65 cumulative infections")
 
         # Test cleanup - delete file
         del_file(cached_population_filename)
 
         pass
 
-    @unittest.skip("See IDM/covasim repo GH 138")
+    @unittest.skip("contact_keys is not a valid attribute of people")
     def test_load_pregenerated_file(self):
 
         # Simulation parameters
@@ -140,7 +138,7 @@ class TestPopulations(CovaSimTest):
             "start_day": "2020-01-15",
             "n_days": 60,
             "pop_type": "synthpops",
-            "use_layers": False
+            # "use_layers": False
         }
 
         cached_population_filename = os.path.join('test_data',
